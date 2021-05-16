@@ -1,35 +1,47 @@
 import React from 'react';
 
-import styles from './index.module.scss';
+/* eslint-disable-next-line */
+export interface UsernameProps {}
 
-export function Index() {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.scss file.
-   */
+export function Username(props: UsernameProps) {
   return (
-    <div className="home-page">
-      <div className="banner">
+    <div className="profile-page">
+      <div className="user-info">
         <div className="container">
-          <h1 className="logo-font">conduit</h1>
-          <p>A place to share your knowledge.</p>
+          <div className="row">
+            <div className="col-xs-12 col-md-10 offset-md-1">
+              <img
+                src="http://i.imgur.com/Qr71crq.jpg"
+                className="user-img"
+                alt=""
+              />
+              <h4>Eric Simons</h4>
+              <p>
+                Cofounder @GoThinkster, lived in Aol's HQ for a few months,
+                kinda looks like Peeta from the Hunger Games
+              </p>
+              <button className="btn btn-sm btn-outline-secondary action-btn">
+                <i className="ion-plus-round"></i>
+                &nbsp; Follow Eric Simons
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="container page">
+      <div className="container">
         <div className="row">
-          <div className="col-md-9">
-            <div className="feed-toggle">
+          <div className="col-xs-12 col-md-10 offset-md-1">
+            <div className="articles-toggle">
               <ul className="nav nav-pills outline-active">
                 <li className="nav-item">
-                  <a className="nav-link disabled" href="">
-                    Your Feed
+                  <a className="nav-link active" href="">
+                    My Articles
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" href="">
-                    Global Feed
+                  <a className="nav-link" href="">
+                    Favorited Articles
                   </a>
                 </li>
               </ul>
@@ -37,7 +49,7 @@ export function Index() {
 
             <div className="article-preview">
               <div className="article-meta">
-                <a href="profile.html">
+                <a href="/profile/eric-simons">
                   <img src="http://i.imgur.com/Qr71crq.jpg" alt="" />
                 </a>
                 <div className="info">
@@ -59,11 +71,11 @@ export function Index() {
 
             <div className="article-preview">
               <div className="article-meta">
-                <a href="profile.html">
+                <a href="/profile/albert-pai">
                   <img src="http://i.imgur.com/N4VcUeJ.jpg" alt="" />
                 </a>
                 <div className="info">
-                  <a href="/profile/albert pai" className="author">
+                  <a href="/profile/albert-pai" className="author">
                     Albert Pai
                   </a>
                   <span className="date">January 20th</span>
@@ -79,40 +91,11 @@ export function Index() {
                 </h1>
                 <p>This is the description for the post.</p>
                 <span>Read more...</span>
+                <ul className="tag-list">
+                  <li className="tag-default tag-pill tag-outline">Music</li>
+                  <li className="tag-default tag-pill tag-outline">Song</li>
+                </ul>
               </a>
-            </div>
-          </div>
-
-          <div className="col-md-3">
-            <div className="sidebar">
-              <p>Popular Tags</p>
-
-              <div className="tag-list">
-                <a href="" className="tag-pill tag-default">
-                  programming
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  javascript
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  emberjs
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  angularjs
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  react
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  mean
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  node
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  rails
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -121,4 +104,4 @@ export function Index() {
   );
 }
 
-export default Index;
+export default Username;
