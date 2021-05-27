@@ -1,8 +1,53 @@
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import React from 'react';
+import ArticlePreview from '../components/article-preview';
+import { Article } from '../models/article';
+import { getArticleList, getFeedArticleList } from '../services/server/article';
+import { getTagList } from '../services/server/tag';
+import { getToken } from '../utils/server/token';
 
-import styles from './index.module.scss';
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const token = getToken(context);
+  let articlesPromise: Promise<Article[]>;
+  let globalFeedActive = false;
+  let myFeedActive = false;
 
-export function Index() {
+  if (context.query.tag) {
+    articlesPromise = getArticleList({ tag: context.query.tag.toString() });
+  } else if (context.query.myfeed !== undefined) {
+    articlesPromise = getFeedArticleList(token);
+    myFeedActive = true;
+  } else {
+    articlesPromise = getArticleList({});
+    globalFeedActive = true;
+  }
+
+  const [tags, articles] = await Promise.all([getTagList(), articlesPromise]);
+
+  return {
+    props: {
+      articles,
+      globalFeedActive,
+      myFeedActive,
+      tags,
+      token,
+    },
+  };
+};
+
+export function Index({
+  articles,
+  globalFeedActive,
+  myFeedActive,
+  tags,
+  token,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   /*
    * Replace the elements below with your own.
    *
@@ -23,64 +68,33 @@ export function Index() {
             <div className="feed-toggle">
               <ul className="nav nav-pills outline-active">
                 <li className="nav-item">
-                  <a className="nav-link disabled" href="">
+                  <a
+                    className={`nav-link ${myFeedActive ? 'active' : ''} ${
+                      token ? '' : 'disabled'
+                    }`}
+                    href="/?myfeed"
+                  >
                     Your Feed
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" href="">
+                  <a
+                    className={`nav-link ${globalFeedActive ? 'active' : ''}`}
+                    href="/"
+                  >
                     Global Feed
                   </a>
                 </li>
               </ul>
             </div>
 
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="profile.html">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" alt="" />
-                </a>
-                <div className="info">
-                  <a href="/profile/eric-simons" className="author">
-                    Eric Simons
-                  </a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 29
-                </button>
-              </div>
-              <a href="/article/1" className="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-              </a>
-            </div>
-
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="profile.html">
-                  <img src="http://i.imgur.com/N4VcUeJ.jpg" alt="" />
-                </a>
-                <div className="info">
-                  <a href="/profile/albert pai" className="author">
-                    Albert Pai
-                  </a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 32
-                </button>
-              </div>
-              <a href="/article/2" className="preview-link">
-                <h1>
-                  The song you won't ever stop singing. No matter how hard you
-                  try.
-                </h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-              </a>
-            </div>
+            {articles.map((article) => (
+              <ArticlePreview
+                article={article}
+                token={token}
+                key={article.slug}
+              ></ArticlePreview>
+            ))}
           </div>
 
           <div className="col-md-3">
@@ -88,30 +102,15 @@ export function Index() {
               <p>Popular Tags</p>
 
               <div className="tag-list">
-                <a href="" className="tag-pill tag-default">
-                  programming
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  javascript
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  emberjs
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  angularjs
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  react
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  mean
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  node
-                </a>
-                <a href="" className="tag-pill tag-default">
-                  rails
-                </a>
+                {tags.map((tag, index) => (
+                  <a
+                    href={`/?tag=${tag}`}
+                    className="tag-pill tag-default"
+                    key={index}
+                  >
+                    {tag}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
