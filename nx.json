@@ -26,5 +26,13 @@
       "tags": [],
       "implicitDependencies": ["app-next"]
     }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
   }
 }
