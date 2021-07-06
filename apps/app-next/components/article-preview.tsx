@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Article } from '../models/article';
+import { Article } from '@real-world/models';
 import { getUserIdFromUsername } from '../utils/user';
 import FavoriteArticleButton from './favorite-article-button';
 

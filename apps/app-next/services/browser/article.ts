@@ -1,5 +1,5 @@
-import { ArticleResponse } from '../../models/article-response';
-import { Article } from '../../models/article';
+import { ArticleResponse } from '@real-world/models';
+import { Article } from '@real-world/models';
 import { getToken } from './token';
 
 export async function favoriteArticle(slug: string): Promise<Article> {

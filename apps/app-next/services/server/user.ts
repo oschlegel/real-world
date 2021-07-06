@@ -1,5 +1,5 @@
-import { User } from '../../models/user';
-import { UserResponse } from '../../models/user-response';
+import { User } from '@real-world/models';
+import { UserResponse } from '@real-world/models';
 import { get } from '../../utils/server/https';
 
 export async function getUser(token: string): Promise<User> {

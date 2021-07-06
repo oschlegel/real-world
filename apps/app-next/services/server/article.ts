@@ -1,6 +1,6 @@
-import { Article } from '../../models/article';
-import { ArticleListResponse } from '../../models/article-list-response';
-import { ArticleResponse } from '../../models/article-response';
+import { Article } from '@real-world/models';
+import { ArticleListResponse } from '@real-world/models';
+import { ArticleResponse } from '@real-world/models';
 import { get } from '../../utils/server/https';
 
 export interface GetArticleListOptions {

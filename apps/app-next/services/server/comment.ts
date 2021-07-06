@@ -1,5 +1,5 @@
-import { Comment } from '../../models/comment';
-import { CommentListResponse } from '../../models/comment-list-response';
+import { Comment } from '@real-world/models';
+import { CommentListResponse } from '@real-world/models';
 import { get } from '../../utils/server/https';
 
 export async function getCommentList(

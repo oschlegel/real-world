@@ -25,6 +25,9 @@
     "app-next-e2e": {
       "tags": [],
       "implicitDependencies": ["app-next"]
+    },
+    "models": {
+      "tags": []
     }
   },
   "targetDependencies": {

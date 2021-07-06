@@ -1,4 +1,4 @@
-import { TagListResponse } from '../../models/tag-list-response';
+import { TagListResponse } from '@real-world/models';
 import { get } from '../../utils/server/https';
 
 export async function getTagList(): Promise<string[]> {

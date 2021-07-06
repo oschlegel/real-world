@@ -1,5 +1,5 @@
 import React from 'react';
-import { Comment as CommentModel } from '../models/comment';
+import { Comment as CommentModel } from '@real-world/models';
 import { getUserIdFromUsername } from '../utils/user';
 
 /* eslint-disable-next-line */

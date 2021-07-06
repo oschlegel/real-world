@@ -1,4 +1,4 @@
-import { ValidationErrorResponse } from '../models/validation-error-response';
+import { ValidationErrorResponse } from '@real-world/models';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isValidationError(

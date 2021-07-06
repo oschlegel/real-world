@@ -1,5 +1,5 @@
-import { UserResponse } from '../../models/user-response';
-import { User } from '../../models/user';
+import { UserResponse } from '@real-world/models';
+import { User } from '@real-world/models';
 
 export async function register(
   username: string,

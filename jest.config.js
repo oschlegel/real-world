@@ -1,3 +1,3 @@
 module.exports = {
-  projects: ['<rootDir>/apps/app-next'],
+  projects: ['<rootDir>/apps/app-next', '<rootDir>/libs/models'],
 };

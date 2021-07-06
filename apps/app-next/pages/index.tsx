@@ -5,7 +5,7 @@ import {
 } from 'next';
 import React from 'react';
 import ArticlePreview from '../components/article-preview';
-import { Article } from '../models/article';
+import { Article } from '@real-world/models';
 import { getArticleList, getFeedArticleList } from '../services/server/article';
 import { getTagList } from '../services/server/tag';
 import { getToken } from '../utils/server/token';

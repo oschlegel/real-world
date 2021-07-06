@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment as CommentModel } from '../models/comment';
+import { Comment as CommentModel } from '@real-world/models';
 import Comment from './comment';
 import CommentForm from './comment-form';
 
