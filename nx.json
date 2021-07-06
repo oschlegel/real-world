@@ -19,6 +19,13 @@
     }
   },
   "projects": {
+    "app-angular-akita": {
+      "tags": []
+    },
+    "app-angular-akita-e2e": {
+      "tags": [],
+      "implicitDependencies": ["app-angular-akita"]
+    },
     "app-next": {
       "tags": []
     },
