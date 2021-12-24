@@ -6,7 +6,7 @@ export async function register(
   email: string,
   password: string
 ): Promise<User> {
-  const response = await fetch('https://conduit.productionready.io/api/users', {
+  const response = await fetch('https://api.realworld.io/api/users', {
     method: 'POST',
     headers: new Headers({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({
@@ -23,16 +23,13 @@ export async function register(
 }
 
 export async function login(email: string, password: string): Promise<User> {
-  const response = await fetch(
-    'https://conduit.productionready.io/api/users/login',
-    {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({
-        user: { email, password },
-      }),
-    }
-  );
+  const response = await fetch('https://api.realworld.io/api/users/login', {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({
+      user: { email, password },
+    }),
+  });
   const responseJSON: UserResponse = await response.json();
 
   if (response.status === 422) {

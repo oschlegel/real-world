@@ -7,7 +7,7 @@ export async function getCommentList(
   token?: string
 ): Promise<Comment[]> {
   const response = await get<CommentListResponse>(
-    `https://conduit.productionready.io/api/articles/${slug}/comments`,
+    `https://api.realworld.io/api/articles/${slug}/comments`,
     {
       headers: token && {
         Authorization: `Token ${token}`,

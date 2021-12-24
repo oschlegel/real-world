@@ -20,7 +20,7 @@ export async function getArticleList(
     .join('&');
 
   const response = await get<ArticleListResponse>(
-    `https://conduit.productionready.io/api/articles?${query}`,
+    `https://api.realworld.io/api/articles?${query}`,
     {
       headers: token && {
         Authorization: `Token ${token}`,
@@ -33,7 +33,7 @@ export async function getArticleList(
 
 export async function getFeedArticleList(token: string): Promise<Article[]> {
   const response = await get<ArticleListResponse>(
-    `https://conduit.productionready.io/api/articles/feed`,
+    `https://api.realworld.io/api/articles/feed`,
     {
       headers: {
         Authorization: `Token ${token}`,
@@ -46,7 +46,7 @@ export async function getFeedArticleList(token: string): Promise<Article[]> {
 
 export async function getArticle(slug: string): Promise<Article> {
   const response = await get<ArticleResponse>(
-    `https://conduit.productionready.io/api/articles/${slug}`,
+    `https://api.realworld.io/api/articles/${slug}`,
     {}
   );
 
