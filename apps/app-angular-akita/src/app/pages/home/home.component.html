@@ -12,52 +12,46 @@
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
             <li class="nav-item">
-              <a class="nav-link disabled" [routerLink]="['/']" [queryParams]="{feed: 'personal'}" queryParamsHandling="merge">Your Feed</a>
+              <a
+                class="nav-link disabled"
+                [routerLink]="['/']"
+                [queryParams]="{ feed: 'personal' }"
+                queryParamsHandling="merge"
+                >Your Feed</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link active" [routerLink]="['/']" [queryParams]="{feed: 'global'}" queryParamsHandling="merge">Global Feed</a>
+              <a
+                class="nav-link active"
+                [routerLink]="['/']"
+                [queryParams]="{ feed: 'global' }"
+                queryParamsHandling="merge"
+                >Global Feed</a
+              >
             </li>
           </ul>
         </div>
 
-        <div class="article-preview">
+        <div class="article-preview" *ngFor="let article of articles$ | async">
           <div class="article-meta">
-            <a [routerLink]="['/profile/xxx']"
-              ><img src="http://i.imgur.com/Qr71crq.jpg"
+            <a [routerLink]="['/profile/' + article.author.username]"
+              ><img [src]="article.author.image"
             /></a>
             <div class="info">
-              <a [routerLink]="['/profile/xxx']" class="author">Eric Simons</a>
-              <span class="date">January 20th</span>
+              <a
+                [routerLink]="['/profile/' + article.author.username]"
+                class="author"
+                >{{ article.author.username }}</a
+              >
+              <span class="date">{{ article.createdAt | date }}</span>
             </div>
             <button class="btn btn-outline-primary btn-sm pull-xs-right">
-              <i class="ion-heart"></i> 29
+              <i class="ion-heart"></i> {{ article.favoritesCount }}
             </button>
           </div>
-          <a [routerLink]="['/article/xxx']" class="preview-link">
-            <h1>How to build webapps that scale</h1>
-            <p>This is the description for the post.</p>
-            <span>Read more...</span>
-          </a>
-        </div>
-
-        <div class="article-preview">
-          <div class="article-meta">
-            <a [routerLink]="['/profile/xxx']"
-              ><img src="http://i.imgur.com/N4VcUeJ.jpg"
-            /></a>
-            <div class="info">
-              <a [routerLink]="['/profile/xxx']" class="author">Albert Pai</a>
-              <span class="date">January 20th</span>
-            </div>
-            <button class="btn btn-outline-primary btn-sm pull-xs-right">
-              <i class="ion-heart"></i> 32
-            </button>
-          </div>
-          <a [routerLink]="['/article/xxx']" class="preview-link">
-            <h1>
-              The song you won't ever stop singing. No matter how hard you try.
-            </h1>
-            <p>This is the description for the post.</p>
+          <a [routerLink]="['/article/' + article.slug]" class="preview-link">
+            <h1>{{ article.title }}</h1>
+            <p>{{ article.description }}</p>
             <span>Read more...</span>
           </a>
         </div>
@@ -69,7 +63,13 @@
 
           <div class="tag-list">
             <ng-container *ngFor="let tag of tags">
-              <a [routerLink]="['/']" [queryParams]="{ tag }" queryParamsHandling="merge" class="tag-pill tag-default">{{tag}}</a>
+              <a
+                [routerLink]="['/']"
+                [queryParams]="{ tag }"
+                queryParamsHandling="merge"
+                class="tag-pill tag-default"
+                >{{ tag }}</a
+              >
             </ng-container>
           </div>
         </div>

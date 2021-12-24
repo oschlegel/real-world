@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ArticleQuery, ArticleService } from '../../shared/state/article';
+import { ArticleQuery, ArticleService } from '../../shared/article-data';
 
 @Component({
   selector: 'rw-article',
