@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "app-angular-akita": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "application",
       "root": "apps/app-angular-akita",
       "sourceRoot": "apps/app-angular-akita/src",
@@ -89,13 +90,14 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/app-angular-akita"],
           "options": {
-            "jestConfig": "apps/app-angular-akita/jest.config.js",
+            "jestConfig": "apps/app-angular-akita/jest.config.ts",
             "passWithNoTests": true
           }
         }
       }
     },
     "app-angular-akita-e2e": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/app-angular-akita-e2e",
       "sourceRoot": "apps/app-angular-akita-e2e/src",
       "projectType": "application",
@@ -123,6 +125,7 @@
       }
     },
     "app-next": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/app-next",
       "sourceRoot": "apps/app-next",
       "projectType": "application",
@@ -135,8 +138,10 @@
             "outputPath": "dist/apps/app-next"
           },
           "configurations": {
-            "production": {}
-          }
+            "production": {},
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "executor": "@nrwl/next:server",
@@ -148,8 +153,13 @@
             "production": {
               "buildTarget": "app-next:build:production",
               "dev": false
+            },
+            "development": {
+              "buildTarget": "app-next:build:development",
+              "dev": true
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "export": {
           "executor": "@nrwl/next:export",
@@ -161,7 +171,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/app-next"],
           "options": {
-            "jestConfig": "apps/app-next/jest.config.js",
+            "jestConfig": "apps/app-next/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -175,6 +185,7 @@
       }
     },
     "app-next-e2e": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/app-next-e2e",
       "sourceRoot": "apps/app-next-e2e/src",
       "projectType": "application",
@@ -202,6 +213,7 @@
       }
     },
     "models": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/models",
       "sourceRoot": "libs/models/src",
       "projectType": "library",
@@ -217,11 +229,12 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/models"],
           "options": {
-            "jestConfig": "libs/models/jest.config.js",
+            "jestConfig": "libs/models/jest.config.ts",
             "passWithNoTests": true
           }
         }
       }
     }
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

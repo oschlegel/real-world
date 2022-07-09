@@ -1,4 +1,5 @@
-module.exports = {
+/* eslint-disable */
+export default {
   displayName: 'app-next',
   preset: '../../jest.preset.js',
   transform: {
