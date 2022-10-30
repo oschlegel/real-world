@@ -85,7 +85,7 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/app-angular"],
+          "outputs": ["{workspaceRoot}/coverage/apps/app-angular"],
           "options": {
             "jestConfig": "apps/app-angular/jest.config.ts",
             "passWithNoTests": true
@@ -181,7 +181,7 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/app-angular-akita"],
+          "outputs": ["{workspaceRoot}/coverage/apps/app-angular-akita"],
           "options": {
             "jestConfig": "apps/app-angular-akita/jest.config.ts",
             "passWithNoTests": true
@@ -232,7 +232,9 @@
           },
           "configurations": {
             "production": {},
-            "development": {}
+            "development": {
+              "outputPath": "apps/app-next"
+            }
           },
           "defaultConfiguration": "production"
         },
@@ -262,7 +264,7 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/app-next"],
+          "outputs": ["{workspaceRoot}/coverage/apps/app-next"],
           "options": {
             "jestConfig": "apps/app-next/jest.config.ts",
             "passWithNoTests": true
@@ -320,7 +322,7 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/models"],
+          "outputs": ["{workspaceRoot}/coverage/libs/models"],
           "options": {
             "jestConfig": "libs/models/jest.config.ts",
             "passWithNoTests": true
