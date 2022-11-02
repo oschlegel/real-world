@@ -8,14 +8,14 @@ import { TagDataService } from '../../shared/tag-data/tag-data.service';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  articles$: Observable<Article[]> = of([])
+  articles$: Observable<Article[]> = of([]);
   articlesLoaded$ = of(false);
-  tags$ = this.tagDataService.tags$;
-  tagsLoaded$ = this.tagDataService.tagsLoaded$;
+  tags$ = this.tagDataService.selectAllEntities();
+  tagsLoaded$ = this.tagDataService.selectAllEntitiesLoaded();
 
-constructor(private tagDataService: TagDataService) {}
+  constructor(private tagDataService: TagDataService) {}
 
   ngOnInit() {
-    this.tagDataService.getAll().subscribe();
+    this.tagDataService.loadAllEntities().subscribe();
   }
 }

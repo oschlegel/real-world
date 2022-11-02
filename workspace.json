@@ -9,7 +9,9 @@
       "targets": {
         "build": {
           "executor": "@angular-devkit/build-angular:browser",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/app-angular",
             "index": "apps/app-angular/src/index.html",
@@ -20,7 +22,9 @@
               "apps/app-angular/src/favicon.ico",
               "apps/app-angular/src/assets"
             ],
-            "styles": ["apps/app-angular/src/styles.scss"],
+            "styles": [
+              "apps/app-angular/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -85,7 +89,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["{workspaceRoot}/coverage/apps/app-angular"],
+          "outputs": [
+            "{workspaceRoot}/coverage/apps/app-angular"
+          ],
           "options": {
             "jestConfig": "apps/app-angular/jest.config.ts",
             "passWithNoTests": true
@@ -103,7 +109,9 @@
       "targets": {
         "build": {
           "executor": "@angular-devkit/build-angular:browser",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/app-angular-akita",
             "index": "apps/app-angular-akita/src/index.html",
@@ -115,7 +123,9 @@
               "apps/app-angular-akita/src/favicon.ico",
               "apps/app-angular-akita/src/assets"
             ],
-            "styles": ["apps/app-angular-akita/src/styles.scss"],
+            "styles": [
+              "apps/app-angular-akita/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -177,11 +187,15 @@
               "apps/app-angular-akita/src/**/*.html"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["{workspaceRoot}/coverage/apps/app-angular-akita"],
+          "outputs": [
+            "{workspaceRoot}/coverage/apps/app-angular-akita"
+          ],
           "options": {
             "jestConfig": "apps/app-angular-akita/jest.config.ts",
             "passWithNoTests": true
@@ -211,11 +225,114 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/app-angular-akita-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/app-angular-akita-e2e/**/*.{js,ts}"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         }
       }
+    },
+    "app-angular-elf": {
+      "projectType": "application",
+      "root": "apps/app-angular-elf",
+      "sourceRoot": "apps/app-angular-elf/src",
+      "prefix": "real-world",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/app-angular-elf",
+            "index": "apps/app-angular-elf/src/index.html",
+            "main": "apps/app-angular-elf/src/main.ts",
+            "polyfills": "apps/app-angular-elf/src/polyfills.ts",
+            "tsConfig": "apps/app-angular-elf/tsconfig.app.json",
+            "assets": [
+              "apps/app-angular-elf/src/favicon.ico",
+              "apps/app-angular-elf/src/assets"
+            ],
+            "styles": [
+              "apps/app-angular-elf/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/app-angular-elf/src/environments/environment.ts",
+                  "with": "apps/app-angular-elf/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "app-angular-elf:build:production"
+            },
+            "development": {
+              "browserTarget": "app-angular-elf:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "app-angular-elf:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/app-angular-elf/**/*.ts",
+              "apps/app-angular-elf/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "{workspaceRoot}/coverage/apps/app-angular-elf"
+          ],
+          "options": {
+            "jestConfig": "apps/app-angular-elf/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
     },
     "app-next": {
       "$schema": "../../node_modules/nx/schemas/project-schema.json",
@@ -225,7 +342,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/next:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "root": "apps/app-next",
             "outputPath": "dist/apps/app-next"
@@ -264,7 +383,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["{workspaceRoot}/coverage/apps/app-next"],
+          "outputs": [
+            "{workspaceRoot}/coverage/apps/app-next"
+          ],
           "options": {
             "jestConfig": "apps/app-next/jest.config.ts",
             "passWithNoTests": true
@@ -273,9 +394,13 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/app-next/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/app-next/**/*.{ts,tsx,js,jsx}"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         }
       }
     },
@@ -301,9 +426,13 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/app-next-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/app-next-e2e/**/*.{js,ts}"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         }
       }
     },
@@ -316,13 +445,19 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/models/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/models/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["{workspaceRoot}/coverage/libs/models"],
+          "outputs": [
+            "{workspaceRoot}/coverage/libs/models"
+          ],
           "options": {
             "jestConfig": "libs/models/jest.config.ts",
             "passWithNoTests": true
