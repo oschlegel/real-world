@@ -1,21 +1,14 @@
 import { createStore, StoreConfig } from '@ngneat/elf';
 import {
   addEntities,
+  deleteEntities,
   selectAllEntities,
   selectEntity,
+  upsertEntities,
   withEntities,
 } from '@ngneat/elf-entities';
-import {
-  createRequestsCacheOperator,
-  createRequestsStatusOperator,
-  selectRequestStatus,
-  updateRequestCache,
-  updateRequestStatus,
-  withRequestsCache,
-  withRequestsStatus,
-} from '@ngneat/elf-requests';
-import { map, tap } from 'rxjs';
-import { EntityRequestService } from './entitiy-request.service';
+import { getRequestResult, trackRequestResult } from '@ngneat/elf-requests';
+import { map, Observable, tap } from 'rxjs';
 
 export abstract class EntityService<
   EntityType extends { [P in IdKey]: PropertyKey },
@@ -23,51 +16,126 @@ export abstract class EntityService<
 > {
   protected store = createStore(
     this.storeConfig,
-    withEntities<EntityType, IdKey>(),
-    withRequestsCache(),
-    withRequestsStatus()
+    withEntities<EntityType, IdKey>()
   );
 
-  protected skipWhileTodosCached = createRequestsCacheOperator(this.store);
-  protected trackRequestsStatus = createRequestsStatusOperator(this.store);
-  protected requestStatusKeyLoadAllEntities = `${this.storeConfig.name}-load-all`;
-  protected requestStatusKeyLoadEntity = (id: EntityType[IdKey]) =>
-    `${this.storeConfig.name}-load-${String(id)}`;
+  protected requestKeyCreateEntity = [this.storeConfig.name, 'create'];
+  protected requestKeyLoadAllEntities = [this.storeConfig.name, 'load', 'all'];
+  protected requestKeyLoadEntity = (id: EntityType[IdKey]) => [
+    this.storeConfig.name,
+    'load',
+    id,
+  ];
+  protected requestKeyUpdateEntity = (id: EntityType[IdKey]) => [
+    this.storeConfig.name,
+    'update',
+    id,
+  ];
+  protected requestKeyDeleteEntity = (id: EntityType[IdKey]) => [
+    this.storeConfig.name,
+    'delete',
+    id,
+  ];
 
-  constructor(
-    protected storeConfig: StoreConfig,
-    protected entityRequestService: EntityRequestService<EntityType, IdKey>
-  ) {}
+  constructor(protected storeConfig: StoreConfig) {}
+
+  selectCreateEntityLoading() {
+    return getRequestResult(this.requestKeyCreateEntity).pipe(
+      map((requestResult) => requestResult.isLoading)
+    );
+  }
+
+  selectCreateEntityLoaded() {
+    return getRequestResult(this.requestKeyCreateEntity).pipe(
+      map((requestResult) => requestResult.isSuccess)
+    );
+  }
+
+  selectCreateEntityErrored() {
+    return getRequestResult(this.requestKeyCreateEntity).pipe(
+      map((requestResult) => requestResult.isError)
+    );
+  }
+
+  selectCreateEntityError() {
+    return getRequestResult(this.requestKeyCreateEntity).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
+    );
+  }
+
+  selectUpdateEntityLoading(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyUpdateEntity(id)).pipe(
+      map((requestResult) => requestResult.isLoading)
+    );
+  }
+
+  selectUpdateEntityLoaded(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyUpdateEntity(id)).pipe(
+      map((requestResult) => requestResult.isSuccess)
+    );
+  }
+
+  selectUpdateEntityErrored(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyUpdateEntity(id)).pipe(
+      map((requestResult) => requestResult.isError)
+    );
+  }
+
+  selectUpdateEntityError(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyUpdateEntity(id)).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
+    );
+  }
+
+  selectDeleteEntityLoading(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyDeleteEntity(id)).pipe(
+      map((requestResult) => requestResult.isLoading)
+    );
+  }
+
+  selectDeleteEntityLoaded(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyDeleteEntity(id)).pipe(
+      map((requestResult) => requestResult.isSuccess)
+    );
+  }
+
+  selectDeleteEntityErrored(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyDeleteEntity(id)).pipe(
+      map((requestResult) => requestResult.isError)
+    );
+  }
+
+  selectDeleteEntityError(id: EntityType[IdKey]) {
+    return getRequestResult(this.requestKeyDeleteEntity(id)).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
+    );
+  }
 
   selectAllEntities() {
     return this.store.pipe(selectAllEntities());
   }
 
   selectAllEntitiesLoading() {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadAllEntities),
-      map((status) => status.value === 'pending')
+    return getRequestResult(this.requestKeyLoadAllEntities).pipe(
+      map((requestResult) => requestResult.isLoading)
     );
   }
 
   selectAllEntitiesLoaded() {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadAllEntities),
-      map((status) => status.value === 'success')
+    return getRequestResult(this.requestKeyLoadAllEntities).pipe(
+      map((requestResult) => requestResult.isSuccess)
     );
   }
 
   selectAllEntitiesErrored() {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadAllEntities),
-      map((status) => status.value === 'error')
+    return getRequestResult(this.requestKeyLoadAllEntities).pipe(
+      map((requestResult) => requestResult.isError)
     );
   }
 
   selectAllEntitiesError() {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadAllEntities),
-      map((status) => (status.value === 'error' ? status.error : null))
+    return getRequestResult(this.requestKeyLoadAllEntities).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
     );
   }
 
@@ -76,58 +144,95 @@ export abstract class EntityService<
   }
 
   selectEntityLoading(id: EntityType[IdKey]) {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadEntity(id)),
-      map((status) => status.value === 'pending')
+    return getRequestResult(this.requestKeyLoadEntity(id)).pipe(
+      map((requestResult) => requestResult.isLoading)
     );
   }
 
   selectEntityLoaded(id: EntityType[IdKey]) {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadEntity(id)),
-      map((status) => status.value === 'success')
+    return getRequestResult(this.requestKeyLoadEntity(id)).pipe(
+      map((requestResult) => requestResult.isSuccess)
     );
   }
 
   selectEntityErrored(id: EntityType[IdKey]) {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadEntity(id)),
-      map((status) => status.value === 'error')
+    return getRequestResult(this.requestKeyLoadEntity(id)).pipe(
+      map((requestResult) => requestResult.isError)
     );
   }
 
   selectEntityError(id: EntityType[IdKey]) {
-    return this.store.pipe(
-      selectRequestStatus(this.requestStatusKeyLoadEntity(id)),
-      map((status) => (status.value === 'error' ? status.error : null))
+    return getRequestResult(this.requestKeyLoadEntity(id)).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
     );
+  }
+
+  createEntity(options: Partial<EntityType>) {
+    return this.createEntityRequest(options).pipe(
+      tap((entity) => this.store.update(addEntities(entity))),
+      trackRequestResult(this.requestKeyCreateEntity, { skipCache: true })
+    );
+  }
+
+  protected createEntityRequest(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options: Partial<EntityType>
+  ): Observable<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateEntity(id: EntityType[IdKey], options: Partial<EntityType>) {
+    return this.updateAllEntityRequest(id, options).pipe(
+      tap((entity) => this.store.update(upsertEntities(entity))),
+      trackRequestResult(this.requestKeyUpdateEntity(id), { skipCache: true })
+    );
+  }
+
+  protected updateAllEntityRequest(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    id: EntityType[IdKey],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options: Partial<EntityType>
+  ): Observable<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteEntity(id: EntityType[IdKey]) {
+    return this.deleteEntityRequest(id).pipe(
+      tap(() => this.store.update(deleteEntities(id))),
+      trackRequestResult(this.requestKeyDeleteEntity(id), { skipCache: true })
+    );
+  }
+
+  protected deleteEntityRequest(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    id: EntityType[IdKey]
+  ): Observable<void> {
+    throw new Error('Method not implemented.');
   }
 
   loadAllEntities() {
-    return this.entityRequestService.loadAllEntities().pipe(
-      tap((entities) =>
-        this.store.update(
-          addEntities(entities),
-          updateRequestCache(this.requestStatusKeyLoadAllEntities),
-          updateRequestStatus(this.requestStatusKeyLoadAllEntities, 'success')
-        )
-      ),
-      this.trackRequestsStatus(this.requestStatusKeyLoadAllEntities),
-      this.skipWhileTodosCached(this.requestStatusKeyLoadAllEntities)
+    return this.loadAllEntitiesRequest().pipe(
+      tap((entities) => this.store.update(addEntities(entities))),
+      trackRequestResult(this.requestKeyLoadAllEntities)
     );
   }
 
+  protected loadAllEntitiesRequest(): Observable<EntityType[]> {
+    throw new Error('Method not implemented.');
+  }
+
   loadEntity(id: EntityType[IdKey]) {
-    return this.entityRequestService.loadEntity(id).pipe(
-      tap((entity) =>
-        this.store.update(
-          addEntities(entity),
-          updateRequestCache(this.requestStatusKeyLoadEntity(id)),
-          updateRequestStatus(this.requestStatusKeyLoadEntity(id), 'success')
-        )
-      ),
-      this.trackRequestsStatus(this.requestStatusKeyLoadEntity(id)),
-      this.skipWhileTodosCached(this.requestStatusKeyLoadEntity(id))
+    return this.loadEntityRequest(id).pipe(
+      tap((entity) => this.store.update(addEntities(entity))),
+      trackRequestResult(this.requestKeyLoadEntity(id))
     );
+  }
+
+  protected loadEntityRequest(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    id: EntityType[IdKey]
+  ): Observable<EntityType> {
+    throw new Error('Method not implemented.');
   }
 }
