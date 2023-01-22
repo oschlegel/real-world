@@ -9,31 +9,34 @@
   <div class="container page">
     <div class="row">
       <div class="col-md-9">
-        <ng-container *ngIf="articlesLoaded$ | async">
-          <div class="feed-toggle">
-            <ul class="nav nav-pills outline-active">
-              <li class="nav-item">
-                <a
-                  class="nav-link disabled"
-                  [routerLink]="['/']"
-                  [queryParams]="{ feed: 'personal' }"
-                  queryParamsHandling="merge"
-                  >Your Feed</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  [routerLink]="['/']"
-                  [queryParams]="{ feed: 'global' }"
-                  queryParamsHandling="merge"
-                  >Global Feed</a
-                >
-              </li>
-            </ul>
-          </div>
+        <div class="feed-toggle">
+          <ul class="nav nav-pills outline-active">
+            <li class="nav-item">
+              <a
+                class="nav-link disabled"
+                [class.active]="(activeTab$ | async) === 'personal'"
+                [routerLink]="['/']"
+                [queryParams]="{ feed: 'personal' }"
+                >Your Feed</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                [class.active]="(activeTab$ | async) === 'global'"
+                [routerLink]="['/']"
+                [queryParams]="{ feed: 'global' }"
+                >Global Feed</a
+              >
+            </li>
+          </ul>
+        </div>
 
-          <div class="article-preview" *ngFor="let article of articles$ | async">
+        <ng-container *ngIf="articlesLoaded$ | async">
+          <div
+            class="article-preview"
+            *ngFor="let article of articles$ | async"
+          >
             <div class="article-meta">
               <a [routerLink]="['/profile/' + article.author.username]"
                 ><img [src]="article.author.image"
@@ -57,6 +60,10 @@
             </a>
           </div>
         </ng-container>
+
+        <ng-container *ngIf="(articlesLoaded$ | async) === false">
+          Loading articles...
+        </ng-container>
       </div>
 
       <div class="col-md-3" *ngIf="tagsLoaded$ | async">
@@ -68,7 +75,6 @@
               <a
                 [routerLink]="['/']"
                 [queryParams]="{ tag: tag.value }"
-                queryParamsHandling="merge"
                 class="tag-pill tag-default"
                 >{{ tag.value }}</a
               >

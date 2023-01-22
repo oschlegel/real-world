@@ -1,17 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UserDataService } from '../user-data/user-data.service';
 
 @Component({
   selector: 'rw-header',
   templateUrl: './header.component.html',
-  styles: [
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+  isLoggedIn$ = this.userDataService.selectIsLoggedIn();
+  user$ = this.userDataService.selectUser();
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  constructor(private userDataService: UserDataService) {}
 }

@@ -10,17 +10,28 @@ import {
 import { getRequestResult, trackRequestResult } from '@ngneat/elf-requests';
 import { map, Observable, tap } from 'rxjs';
 
+export interface EntityServiceConfig<IdKey extends string = 'id'>
+  extends StoreConfig {
+  idKey?: IdKey;
+}
+
 export abstract class EntityService<
   EntityType extends { [P in IdKey]: PropertyKey },
-  IdKey extends string = 'id'
+  IdKey extends string = 'id',
+  LoadManyEntitiesOptions = unknown
 > {
   protected store = createStore(
     this.storeConfig,
-    withEntities<EntityType, IdKey>()
+    withEntities<EntityType, IdKey>({ idKey: this.storeConfig.idKey })
   );
 
   protected requestKeyCreateEntity = [this.storeConfig.name, 'create'];
   protected requestKeyLoadAllEntities = [this.storeConfig.name, 'load', 'all'];
+  protected requestKeyLoadManyEntities = (options: LoadManyEntitiesOptions) => [
+    this.storeConfig.name,
+    'load',
+    JSON.stringify(options),
+  ];
   protected requestKeyLoadEntity = (id: EntityType[IdKey]) => [
     this.storeConfig.name,
     'load',
@@ -37,7 +48,7 @@ export abstract class EntityService<
     id,
   ];
 
-  constructor(protected storeConfig: StoreConfig) {}
+  constructor(protected storeConfig: EntityServiceConfig<IdKey>) {}
 
   selectCreateEntityLoading() {
     return getRequestResult(this.requestKeyCreateEntity).pipe(
@@ -139,6 +150,30 @@ export abstract class EntityService<
     );
   }
 
+  selectManyEntitiesLoading(options: LoadManyEntitiesOptions) {
+    return getRequestResult(this.requestKeyLoadManyEntities(options)).pipe(
+      map((requestResult) => requestResult.isLoading)
+    );
+  }
+
+  selectManyEntitiesLoaded(options: LoadManyEntitiesOptions) {
+    return getRequestResult(this.requestKeyLoadManyEntities(options)).pipe(
+      map((requestResult) => requestResult.isSuccess)
+    );
+  }
+
+  selectManyEntitiesErrored(options: LoadManyEntitiesOptions) {
+    return getRequestResult(this.requestKeyLoadManyEntities(options)).pipe(
+      map((requestResult) => requestResult.isError)
+    );
+  }
+
+  selectManyEntitiesError(options: LoadManyEntitiesOptions) {
+    return getRequestResult(this.requestKeyLoadManyEntities(options)).pipe(
+      map((requestResult) => requestResult.isError && requestResult.error)
+    );
+  }
+
   selectEntity(id: EntityType[IdKey]) {
     return this.store.pipe(selectEntity(id));
   }
@@ -182,13 +217,13 @@ export abstract class EntityService<
   }
 
   updateEntity(id: EntityType[IdKey], options: Partial<EntityType>) {
-    return this.updateAllEntityRequest(id, options).pipe(
+    return this.updateEntityRequest(id, options).pipe(
       tap((entity) => this.store.update(upsertEntities(entity))),
       trackRequestResult(this.requestKeyUpdateEntity(id), { skipCache: true })
     );
   }
 
-  protected updateAllEntityRequest(
+  protected updateEntityRequest(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id: EntityType[IdKey],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -219,6 +254,20 @@ export abstract class EntityService<
   }
 
   protected loadAllEntitiesRequest(): Observable<EntityType[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  loadManyEntities(options: LoadManyEntitiesOptions) {
+    return this.loadManyEntitiesRequest(options).pipe(
+      tap((entities) => this.store.update(addEntities(entities))),
+      trackRequestResult(this.requestKeyLoadManyEntities(options))
+    );
+  }
+
+  protected loadManyEntitiesRequest(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    options: LoadManyEntitiesOptions
+  ): Observable<EntityType[]> {
     throw new Error('Method not implemented.');
   }
 

@@ -1,17 +1,16 @@
 <div class="profile-page">
-  <div class="user-info">
+  <div class="user-info" *ngIf="profileLoaded$ | async">
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
-          <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-          <h4>Eric Simons</h4>
+          <img [src]="(profile$ | async)?.image" class="user-img" />
+          <h4>{{ (profile$ | async)?.username }}</h4>
           <p>
-            Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-            looks like Peeta from the Hunger Games
+            {{ (profile$ | async)?.bio }}
           </p>
           <button class="btn btn-sm btn-outline-secondary action-btn">
             <i class="ion-plus-round"></i>
-            &nbsp; Follow Eric Simons
+            &nbsp; Follow {{ (profile$ | async)?.username }}
           </button>
         </div>
       </div>
@@ -24,17 +23,23 @@
         <div class="articles-toggle">
           <ul class="nav nav-pills outline-active">
             <li class="nav-item">
-              <a class="nav-link active" [routerLink]="['/profile/xxx']">My Articles</a>
+              <a class="nav-link active" [routerLink]="['/profile/xxx']"
+                >My Articles</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/profile/xxx/favorites']">Favorited Articles</a>
+              <a class="nav-link" [routerLink]="['/profile/xxx/favorites']"
+                >Favorited Articles</a
+              >
             </li>
           </ul>
         </div>
 
         <div class="article-preview">
           <div class="article-meta">
-            <a [routerLink]="['/profile/xxx']"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+            <a [routerLink]="['/profile/xxx']"
+              ><img src="http://i.imgur.com/Qr71crq.jpg"
+            /></a>
             <div class="info">
               <a [routerLink]="['/profile/xxx']" class="author">Eric Simons</a>
               <span class="date">January 20th</span>
@@ -52,7 +57,9 @@
 
         <div class="article-preview">
           <div class="article-meta">
-            <a [routerLink]="['/profile/xxx']"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
+            <a [routerLink]="['/profile/xxx']"
+              ><img src="http://i.imgur.com/N4VcUeJ.jpg"
+            /></a>
             <div class="info">
               <a [routerLink]="['/profile/xxx']" class="author">Albert Pai</a>
               <span class="date">January 20th</span>
